@@ -1,0 +1,16 @@
+{
+	"name": "rainy3d",
+	"url": "https://github.com/GengYan0/rainy3d",
+	"license": "MIT",
+	"tags": ["flixel", "openfl", "3d", "stage3d", "renderer", "agal"],
+	"description": "Stage3D 3D renderer for HaxeFlixel: scene graph, PBR-ish lighting, shadow maps, SSAO, model import (OBJ/GLB), post-processing and a camera rig. Host-agnostic through rainy.render3d.host.",
+	"version": "0.1.0",
+	"classPath": ".",
+	"releasenote": "Extracted from RainyEngine: core, scene loaders, post FX and Stage3D bridge.",
+	"contributors": ["RainyEngine"],
+	"dependencies": {
+		"flixel": "",
+		"openfl": "",
+		"lime": ""
+	}
+}
