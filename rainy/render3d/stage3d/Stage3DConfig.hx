@@ -23,7 +23,8 @@ class Stage3DConfig
 	public var enabled:Bool = false;
 	public var placement:String = 'behindGF';
 	public var opacity:Float = 1.0;
-	public var skyTexture:String = 'images/backgrounds/isotope/sky.png';
+
+	public var skyTexture:String = '';
 	public var skyTint:String = '#FFFFFF';
 	public var skyRoll:Float = 0.6;
 	public var skyFallbackTop:String = '#1B4A8A';
@@ -284,7 +285,7 @@ class Stage3DConfig
 		cfg.enabled = num(d, 'enabled', cfg.enabled ? 1 : 0) != 0;
 		cfg.placement = str(d, 'placement', cfg.placement);
 		cfg.opacity = num(d, 'opacity', cfg.opacity);
-		cfg.skyTexture = str(d, 'skyTexture', cfg.skyTexture);
+		cfg.skyTexture = optStr(d, 'skyTexture', cfg.skyTexture);
 		cfg.skyTint = str(d, 'skyTint', cfg.skyTint);
 		cfg.skyRoll = num(d, 'skyRoll', cfg.skyRoll);
 		cfg.skyFallbackTop = str(d, 'skyFallbackTop', cfg.skyFallbackTop);
@@ -353,6 +354,13 @@ class Stage3DConfig
 		if (v == null) return def;
 		var s:String = Std.string(v);
 		return s.length == 0 ? def : s;
+	}
+
+	static function optStr(d:Dynamic, f:String, def:String):String
+	{
+		var v:Dynamic = Reflect.field(d, f);
+		if (v == null) return def;
+		return Std.string(v);
 	}
 
 	static function num(d:Dynamic, f:String, def:Float):Float
