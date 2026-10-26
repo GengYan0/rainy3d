@@ -33,6 +33,11 @@ class R3DFullscreen
 	{
 		var q = mesh();
 		if (q == null || sh == null || context == null) return false;
+		// The quad is the one draw per frame that cannot afford a stale answer: it is the
+		// only geometry whose whole job is to cover the target, so a skipped `setVertexBufferAt`
+		// does not shift a sprite, it leaves part of the target untouched and the pass's
+		// clear colour showing through as a hard edged wedge.
+		R3DGLStateCache.invalidateAttribs();
 		R3DGLStateCache.bindVertexBuffer(sh.attrPosition, q.vertexBuffer, 0, cast Context3DVertexBufferFormat.FLOAT_3);
 		if (sh.attrTexCoord >= 0)
 			R3DGLStateCache.bindVertexBuffer(sh.attrTexCoord, q.uvBuffer, 0, cast Context3DVertexBufferFormat.FLOAT_2);

@@ -855,6 +855,11 @@ class R3DScene extends FlxSprite
 			R3DGLStateCache.depthMask = 0;
 		}
 		catch (e2:Dynamic) { R3DLog.silentFailure("R3DScene.backToFlixel", e2); }
+		// The flush above reinstalled the attribute arrays from openfl's shadow state, so
+		// nothing the cache remembers about this frame's bindings is true any more. Without
+		// this the next frame's first quad is drawn with whatever buffer openfl left in the
+		// slot, which is a sprite's, not a full screen quad's.
+		R3DGLStateCache.invalidateAttribs();
 		R3DGLStateCache.invalidateOpenfl();
 	}
 

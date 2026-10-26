@@ -40,6 +40,14 @@ class R3DGLStateCache
 		if (context != null) context.__invalidateGLCache();
 	}
 
+	public static function invalidateAttribs():Void
+	{
+		attrAt = [];
+		attrFmtAt = [];
+		attrCleared = [];
+		program = null;
+	}
+
 	public static function invalidate():Void
 	{
 		culling = -1;
