@@ -122,7 +122,7 @@ class R3DAA
 	{
 		if (shader != null && !shader.failed) return shader;
 		if (shaderFailed) return null;
-		var s = R3DShader.fromSources(R3DShaders.UNLIT_VERT, FXAA_FRAG, ["SOLID"]);
+		var s = R3DShader.fromSources(R3DShaders.FULLSCREEN_VERT, FXAA_FRAG, null);
 		if (s == null || s.failed)
 		{
 			shaderFailed = true;

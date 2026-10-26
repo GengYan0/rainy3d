@@ -300,7 +300,7 @@ void main()
 
 	public static function passShader(frag:String):R3DShader
 	{
-		return R3DShader.fromSources(R3DShaders.UNLIT_VERT, frag, ["SOLID"]);
+		return R3DShader.fromSources(R3DShaders.FULLSCREEN_VERT, frag, null);
 	}
 
 	public static function copy():R3DPostPass

@@ -208,7 +208,7 @@ class R3DPresent
 			case 'rcas': RCAS_FRAG;
 			default: FSR_FRAG;
 		};
-		s = R3DShader.fromSources(R3DShaders.UNLIT_VERT, frag, ["SOLID"]);
+		s = R3DShader.fromSources(R3DShaders.FULLSCREEN_VERT, frag, null);
 		if (s == null || s.failed)
 		{
 			failed.set(key, true);

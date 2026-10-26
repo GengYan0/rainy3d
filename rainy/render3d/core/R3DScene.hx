@@ -561,6 +561,19 @@ class R3DScene extends FlxSprite
 		catch (e:Dynamic) { R3DLog.silentFailure("R3DScene.dumpTarget", e); }
 	}
 
+	public function grabTarget(path:String):Int
+	{
+		if (target == null || sceneW < 8 || sceneH < 8) return -1;
+		rebindTarget();
+		try
+		{
+			dumpTarget(path);
+		}
+		catch (e:Dynamic) { R3DLog.silentFailure("R3DScene.grabTarget", e); }
+		backToFlixel();
+		return sceneW * sceneH * 4;
+	}
+
 	function beginTarget():Void
 	{
 		if (probeGpu && (frameCount & 31) == 0)

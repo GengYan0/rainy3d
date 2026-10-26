@@ -5,6 +5,18 @@ import rainy.render3d.core.R3DShader;
 
 class R3DShaders
 {
+
+	public static var FULLSCREEN_VERT:String = '
+#include "r3d/inc/r3d.glsl"
+#include "r3d/inc/mesh.glsl"
+
+void main(void)
+{
+	r3d_TexCoordv = r3d_TexCoord;
+	r3d_Colorv = vec4(1.0);
+	gl_Position = vec4(r3d_Position.xy, 0.0, 1.0);
+}';
+
 	public static var UNLIT_VERT:String = '
 #include "r3d/inc/r3d.glsl"
 #include "r3d/inc/material.glsl"
