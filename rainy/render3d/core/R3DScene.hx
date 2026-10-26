@@ -463,7 +463,11 @@ class R3DScene extends FlxSprite
 			var shaded:R3DTexture = postChain.process(resolved);
 			if (shaded != null) resolved = shaded;
 		}
-		if (!direct) presentResolved(resolved);
+		if (!direct)
+		{
+			presentResolved(resolved);
+			backToFlixel();
+		}
 		msRender += (haxe.Timer.stamp() - t0) * 1000.0;
 		if (onPostDraw != null) onPostDraw();
 
@@ -606,7 +610,7 @@ class R3DScene extends FlxSprite
 				context.__flushGLFramebuffer();
 			}
 			try { _directViewport = GL.getParameter(GL.VIEWPORT); } catch (e:Dynamic) { _directViewport = null; }
-			GL.viewport(0, 0, context.backBufferWidth, context.backBufferHeight);
+			GL.viewport(0, 0, displayW > 0 ? displayW : context.backBufferWidth, displayH > 0 ? displayH : context.backBufferHeight);
 			GL.enable(GL.DEPTH_TEST);
 			GL.enable(GL.STENCIL_TEST);
 			R3DGLStateCache.invalidateOpenfl();
