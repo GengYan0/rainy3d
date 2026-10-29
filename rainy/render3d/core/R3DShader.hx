@@ -302,7 +302,10 @@ class R3DShader
 
 	public function compile():Void
 	{
+		// Uniform locations belong to one program object; a recompile invalidates every one of them.
 		uniformValueCache = new StringMap();
+		uniformCache = new StringMap();
+		arrayLocCache = new StringMap();
 		if (context == null) context = openfl.Lib.current.stage.context3D;
 		R3DGLStateCache.init(context);
 		failed = false;

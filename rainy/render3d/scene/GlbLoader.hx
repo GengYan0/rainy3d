@@ -424,6 +424,8 @@ class GlbLoader
 		}
 		var stride = intOf(at(views, bv), "byteStride", 0);
 		if (stride <= 0) stride = comps * size;
+		var normalized:Bool = Reflect.field(a, "normalized") == true;
+		var scale:Float = normalized ? normalizeScale(ct) : 1;
 		var n = intOf(a, "count", 0);
 		var out:Array<Float> = [];
 		var p = off;
@@ -432,11 +434,23 @@ class GlbLoader
 		{
 			if (p + comps * size > buf.length) break;
 			for (c in 0...comps)
-				out.push(readComponent(buf, p + c * size, ct));
+				out.push(readComponent(buf, p + c * size, ct) * scale);
 			p += stride;
 			i++;
 		}
 		return out;
+	}
+
+	static inline function normalizeScale(ct:Int):Float
+	{
+		return switch (ct)
+		{
+			case 5120: 1 / 127;
+			case 5121: 1 / 255;
+			case 5122: 1 / 32767;
+			case 5123: 1 / 65535;
+			default: 1;
+		}
 	}
 
 	static function readComponent(b:Bytes, off:Int, ct:Int):Float
