@@ -26,7 +26,7 @@
 ```
 
 ```bash
-haxelib dev rainy3d "D:/libs/rainy3d"
+haxelib git rainy3d https://github.com/GengYan0/rainy3d
 ```
 
 依赖 `flixel` 6.2.0、`openfl` 9.5.2、`lime` 8.3.2。渲染需要 Stage3D 上下文，
