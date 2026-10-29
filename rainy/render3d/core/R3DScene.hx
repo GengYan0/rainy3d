@@ -694,8 +694,11 @@ class R3DScene extends FlxSprite
 		if (aa == null) aa = new R3DAA();
 
 		var needsResolve:Bool = src.width != displayW || src.height != displayH;
-		if (needsResolve && presentOut == null)
+		if (needsResolve && (presentOut == null || presentOut.disposed || presentOut.width != displayW || presentOut.height != displayH))
+		{
+			if (presentOut != null) presentOut.dispose();
 			presentOut = R3DTexture.create(displayW, displayH);
+		}
 
 		var shown:R3DTexture = present.apply(src, displayW, displayH, presentOut);
 		if (shown == null) return;

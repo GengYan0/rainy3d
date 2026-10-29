@@ -81,9 +81,9 @@ class R3DPresent
 		if (m == R3DPresentMode.OFF) return src;
 		if (src.width == w && src.height == h && m != R3DPresentMode.FSR_SHARP) return src;
 
-		if (into != null)
+		if (into != null && into.width == w && into.height == h && !into.disposed)
 		{
-			if (into.width != w || into.height != h || into.disposed) return src;
+			if (dst != null && ownedDst && dst != into) dst.dispose();
 			dst = into;
 			dstW = w;
 			dstH = h;
@@ -161,7 +161,8 @@ class R3DPresent
 	function ensureDst(w:Int, h:Int):Bool
 	{
 		if (dst != null && dstW == w && dstH == h && !dst.disposed) return true;
-		if (dst != null) dst.dispose();
+		// A caller owned texture is not deleted here.
+		if (dst != null && ownedDst) dst.dispose();
 		dst = R3DTexture.create(w, h);
 		if (dst == null)
 		{

@@ -32,6 +32,9 @@ class R3DFramebuffer
 		colorTex = color;
 		triedFormats = '';
 
+		// Leaves the binding as it found it on every exit.
+		final previous = currentBinding();
+
 		try
 		{
 			fbo = GL.createFramebuffer();
@@ -41,6 +44,7 @@ class R3DFramebuffer
 		catch (e:Dynamic)
 		{
 			R3DLog.capture(e, 'r3dfbo', 'create');
+			restoreBinding(previous);
 			dispose();
 			return false;
 		}
@@ -48,8 +52,9 @@ class R3DFramebuffer
 		if (!makeDepth())
 		{
 			status = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
-			complete = false;
 			R3DLog.warn('r3dfbo', 'depth texture: all formats failed: ' + triedFormats);
+			restoreBinding(previous);
+			dispose();
 			return false;
 		}
 
@@ -57,7 +62,21 @@ class R3DFramebuffer
 		complete = status == GL.FRAMEBUFFER_COMPLETE;
 		if (!complete)
 			R3DLog.warn('r3dfbo', 'FBO incomplete status=0x' + StringTools.hex(status, 4) + ' depth=' + depthFormat);
+		restoreBinding(previous);
 		return complete;
+	}
+
+	static function currentBinding():Dynamic
+	{
+		try
+			return GL.getParameter(GL.FRAMEBUFFER_BINDING)
+		catch (e:Dynamic)
+			return null;
+	}
+
+	static function restoreBinding(previous:Dynamic):Void
+	{
+		try GL.bindFramebuffer(GL.FRAMEBUFFER, cast previous) catch (e:Dynamic) {}
 	}
 
 	function makeDepth():Bool
@@ -117,20 +136,16 @@ class R3DFramebuffer
 
 	public function bind():Void
 	{
-		if (fbo == null) return;
-		try
-			prevFbo = GL.getParameter(GL.FRAMEBUFFER_BINDING)
-		catch (e:Dynamic)
-			prevFbo = null;
+		if (fbo == null || bound) return;
+		prevFbo = currentBinding();
 		GL.bindFramebuffer(GL.FRAMEBUFFER, fbo);
 		bound = true;
 	}
 
 	public function unbind():Void
 	{
-		try
-			GL.bindFramebuffer(GL.FRAMEBUFFER, cast prevFbo)
-		catch (e:Dynamic) {}
+		if (!bound) return;
+		restoreBinding(prevFbo);
 		prevFbo = null;
 		bound = false;
 	}
@@ -142,6 +157,12 @@ class R3DFramebuffer
 
 	public function dispose():Void
 	{
+		if (bound)
+		{
+			restoreBinding(prevFbo);
+			prevFbo = null;
+			bound = false;
+		}
 		if (depthTex != null)
 		{
 			try GL.deleteTexture(depthTex) catch (e:Dynamic) {}
@@ -155,6 +176,8 @@ class R3DFramebuffer
 		colorTex = null;
 		complete = false;
 		depthFormat = 'none';
+		width = 0;
+		height = 0;
 	}
 
 	public function statusText():String

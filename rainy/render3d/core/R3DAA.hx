@@ -51,7 +51,7 @@ class R3DAA
 		if (src == null || w < 2 || h < 2) return src;
 		if (mode == R3DAAMode.OFF) return src;
 
-		var target:R3DTexture = into;
+		var target:R3DTexture = (into != null && into.width == w && into.height == h && !into.disposed) ? into : null;
 		if (target == null)
 		{
 			if (dst == null || dstW != w || dstH != h || dst.disposed)

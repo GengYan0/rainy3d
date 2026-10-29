@@ -269,7 +269,9 @@ class R3DTexture
 			data = null;
 		}
 		if (data == null) return null;
+		// `fromBitmapData` never frees its argument.
 		var t = fromBitmapData(data, null, true, params);
+		disposeQuietly(data);
 		if (t != null) t.path = path;
 		return t;
 	}
@@ -303,10 +305,23 @@ class R3DTexture
 
 	public static function create(width:Int, height:Int, format:Dynamic = null):R3DTexture
 	{
+		if (width < 1 || height < 1)
+		{
+			R3DLog.warn('r3d', 'texture create refused invalid size ' + width + 'x' + height);
+			return null;
+		}
 		var ctx = R3DShader.context == null ? openfl.Lib.current.stage.context3D : R3DShader.context;
 		var fmt = format == null ? Context3DTextureFormat.BGRA : cast format;
 		var t = new R3DTexture();
-		t.glTexture = ctx.createTexture(width, height, fmt, true);
+		try
+		{
+			t.glTexture = ctx.createTexture(width, height, fmt, true);
+		}
+		catch (e:Dynamic)
+		{
+			R3DLog.capture(e, 'r3d', 'createTexture ' + width + 'x' + height);
+			return null;
+		}
 		t.width = width;
 		t.height = height;
 		return t;
